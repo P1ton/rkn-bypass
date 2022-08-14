@@ -1,0 +1,4 @@
+  # Only port 53 is supported as NSLOOKUP no longer supports non-standard ports
+  .:53 {
+    forward . 8.8.8.8:53
+  }

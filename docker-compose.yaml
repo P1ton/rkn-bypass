@@ -1,0 +1,48 @@
+version: '3'
+services:
+  sstp-client:
+    build:
+      context: ./sstp-client/
+      dockerfile: Dockerfile
+    container_name: sstp-client
+    restart: always
+    network_mode: host
+    command: bash -c 'sstpc --log-stdout --log-level 4 --cert-warn --save-server-route --user "${VPN_USER}" --password "${VPN_PASSWORD}" "${VPN_EXTERNAL_IP}":"${VPN_EXTERNAL_PORT}" usepeerdns require-mschap-v2 noauth noipdefault nobsdcomp nodeflate'
+    privileged: true
+    #healthcheck:
+    #  test: ["CMD-SHELL", "health.sh", "${VPN_EXTERNAL_IP}"]
+    #  interval: 10s
+    #  timeout: 5s
+    #  retries: 5
+
+  bird4:
+    container_name: bird
+    build:
+      context: ./bird/
+      dockerfile: Dockerfile
+    cap_add:
+      - NET_ADMIN
+      - NET_BROADCAST
+      - NET_RAW
+    network_mode: host
+    volumes:
+      - ./bird/config:/etc/bird:rw
+      - ./lists:/opt/
+    depends_on:
+      - sstp-client
+    #    condition: service_healthy
+
+  coredns:
+    build:
+      context: ./coredns/
+      dockerfile: Dockerfile
+    container_name: coredns
+    restart: always
+    ports:
+      - "${VPN_INTERNAL_IP}:53:53/tcp"
+      - "${VPN_INTERNAL_IP}:53:53/udp"
+    volumes:
+      - './coredns/config:/etc/coredns'
+    depends_on:
+      - sstp-client
+    #    condition: service_healthy
