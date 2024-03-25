@@ -1,4 +1,4 @@
-FROM coredns/coredns:1.7.0
+FROM coredns/coredns:1.11.1
 
 EXPOSE 53 53/udp
 VOLUME ["/etc/coredns"]
