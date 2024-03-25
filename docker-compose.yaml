@@ -15,7 +15,7 @@ services:
     #  timeout: 5s
     #  retries: 5
 
-  bird4:
+  bird:
     container_name: bird
     build:
       context: ./bird/
@@ -59,4 +59,4 @@ services:
       - ./bird/run:/var/run/bird
       - ./update-routes/lists:/opt/lists
     depends_on:
-      - bird4
+      - bird
