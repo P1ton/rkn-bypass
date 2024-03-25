@@ -33,6 +33,7 @@ services:
       sstp-client:
         condition: service_healthy
 
+  # TODO: Перезапуск если нет интерфейса
   coredns:
     build:
       context: ./coredns/
