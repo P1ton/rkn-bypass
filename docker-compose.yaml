@@ -40,8 +40,8 @@ services:
     container_name: coredns
     restart: always
     ports:
-      - "53:53/tcp"
-      - "53:53/udp"
+      - "${VPN_INTERNAL_IP}:53:53/tcp"
+      - "${VPN_INTERNAL_IP}:53:53/udp"
     volumes:
       - './coredns/config:/etc/coredns'
     depends_on:
