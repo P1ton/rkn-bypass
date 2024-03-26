@@ -14,11 +14,7 @@ services:
       - ./bird/run:/var/run/bird
       - ./bird/config:/etc/bird:rw
       - ./update-routes/lists:/opt/
-    depends_on:
-      sstp-client:
-        condition: service_healthy
 
-  # TODO: Перезапуск если нет интерфейса
   coredns:
     build:
       context: ./coredns/
